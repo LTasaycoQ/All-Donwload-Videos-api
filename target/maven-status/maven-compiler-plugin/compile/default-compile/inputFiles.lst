@@ -1,0 +1,6 @@
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/VideosDonwloadApplication.java
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/config/SwaggerConfig.java
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/model/videos.java
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/repository/VideosRepository.java
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/rest/VideoDownloaderRest.java
+/workspaces/All-Donwload-Videos-api/src/main/java/pe/edu/vallegrande/videosdonwload/service/VideoDownloaderService.java

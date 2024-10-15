@@ -1,0 +1,6 @@
+pe/edu/vallegrande/videosdonwload/repository/VideosRepository.class
+pe/edu/vallegrande/videosdonwload/rest/VideoDownloaderRest.class
+pe/edu/vallegrande/videosdonwload/model/videos.class
+pe/edu/vallegrande/videosdonwload/VideosDonwloadApplication.class
+pe/edu/vallegrande/videosdonwload/service/VideoDownloaderService.class
+pe/edu/vallegrande/videosdonwload/config/SwaggerConfig.class

@@ -6,16 +6,15 @@ on:
 
 jobs:
   build:
-    name: Build and push Docker image
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get latest tag
-        id: get_tag
+      - name: Read version
+        id: read_version
         run: |
-          VERSION=$(git describe --tags --abbrev=0 || echo "v0.0")
+          VERSION=$(cat version.txt)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Build Docker image

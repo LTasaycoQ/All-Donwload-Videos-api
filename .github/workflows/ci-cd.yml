@@ -38,3 +38,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=LTasaycoQ_All-Donwload-Videos-api
+      
+      
+      - name: Docker image
+        run: |
+          docker build -t luistasayco2004/video-donwload-sonarcloud:latest .
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER-USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER-TOKEN }}
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+      - name: Push Docker image
+        run: |
+          docker push diegoramos678/spring-test:latest

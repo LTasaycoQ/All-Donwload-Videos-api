@@ -1,0 +1,27 @@
+name: Docker Build and Push
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t luistasayco2004/video-donwload-sonarcloud:latest .
+
+      - name: Docker Hub Login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+
+      - name: Push Docker image
+        run: |
+          docker push luistasayco2004/video-donwload-sonarcloud:latest

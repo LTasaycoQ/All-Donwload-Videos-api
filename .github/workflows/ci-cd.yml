@@ -51,4 +51,4 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
       - name: Push Docker image
         run: |
-          docker push diegoramos678/spring-test:latest
+          docker push luistasayco2004/video-donwload-sonarcloud:latest

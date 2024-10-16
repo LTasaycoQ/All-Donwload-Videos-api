@@ -44,12 +44,11 @@ jobs:
         run: |
           docker build -t luistasayco2004/video-donwload-sonarcloud:latest .
 
-      - name: Log in to Docker Hub
+      - name:  Docker Hub Login
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
       - name: Push Docker image
         run: |
           docker push diegoramos678/spring-test:latest

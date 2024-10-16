@@ -26,7 +26,7 @@ public class VideoDownloaderService {
     public VideoDownloaderService(WebClient.Builder webClientBuilder, VideosRepository videosRepository) {
         this.webClient = webClientBuilder
                 .baseUrl("https://social-media-video-downloader.p.rapidapi.com")
-                .defaultHeader("x-rapidapi-key", "67cbc6ba2amsh44a419b487c7443p184a72jsndc1f0cc49523")
+                .defaultHeader("x-rapidapi-key", "2e04122a0amshee4e856639b07d6p19ef34jsn78dd0f82df54")
                 .defaultHeader("x-rapidapi-host", "social-media-video-downloader.p.rapidapi.com")
                 .build();
         this.videosRepository = videosRepository;

@@ -1,4 +1,4 @@
-name: Increment Version
+name: Incrementador Version
 on:
   push:
     branches:
@@ -11,27 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Read current version
-        id: read_version
-        run: |
-          if [[ -f version.txt ]]; then
-            VERSION=$(cat version.txt)
-          else
-            VERSION="0.0"
-          fi
-          echo "CURRENT_VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Increment version
+      - name: Read and Increment Version
         id: increment_version
         run: |
-          IFS='.' read -r major minor <<< "${{ env.CURRENT_VERSION }}"
-          if [[ "$major" -eq 0 && "$minor" -lt 9 ]]; then
-            minor=$((minor + 1))
-          elif [[ "$major" -eq 0 && "$minor" -eq 9 ]]; then
-            major=1
+          VERSION=$(cat version.txt || echo "0.0")
+          IFS='.' read -r major minor <<< "$VERSION"
+          minor=$((minor + 1))
+          if [[ "$minor" -eq 10 ]]; then
             minor=0
-          else
-            minor=$((minor + 1))
+            major=$((major + 1))
           fi
           NEW_VERSION="$major.$minor"
           echo "$NEW_VERSION" > version.txt

@@ -12,9 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set version
+        id: version
+        run: |
+          VERSION=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Build Docker image
         run: |
-          docker build -t luistasayco2004/video-donwload-sonarcloud:latest .
+          docker build -t luistasayco2004/video-donwload-sonarcloud:${{ env.VERSION }} .
 
       - name: Docker Hub Login
         env:
@@ -24,4 +30,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push luistasayco2004/video-donwload-sonarcloud:latest
+          docker push luistasayco2004/video-donwload-sonarcloud:${{ env.VERSION }}

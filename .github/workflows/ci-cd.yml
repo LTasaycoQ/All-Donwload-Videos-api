@@ -46,8 +46,8 @@ jobs:
 
       - name: Log in to Docker Hub
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER-USERNAME }}
-          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER-TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_TOKEN }}
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
       - name: Push Docker image

@@ -2,6 +2,8 @@ spring:
   application:
     name: donwload
   r2dbc:
-    url: r2dbc:postgresql://postgres.aaqdicjpmdxudtixqfic:66LwnnFOEwZPOWyg@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+    url: r2dbc:postgresql://aws-0-us-east-1.pooler.supabase.com:5432/postgres
+    username: postgres.aaqdicjpmdxudtixqfic
+    password: 66LwnnFOEwZPOWyg
   server:
     port: 8080

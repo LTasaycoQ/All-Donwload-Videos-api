@@ -46,12 +46,12 @@ public class VideoDownloaderService {
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
 
-                        String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "";
+                        String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "", portada = "";
                         switch (domain) {
                             case "www.tiktok.com":
                                 videoUrl = jsonNode.path("src_url").asText();
                                 title = jsonNode.path("title").asText();
-
+                                portada = jsonNode.path("picture").asText();
                                 avatar = jsonNode.path("author").path("avatar").asText();
                                 nickname = jsonNode.path("author").path("nickname").asText();
 
@@ -61,6 +61,7 @@ public class VideoDownloaderService {
                             case "vm.tiktok.com":
                                 videoUrl = jsonNode.path("src_url").asText();
                                 title = jsonNode.path("title").asText();
+                                portada = jsonNode.path("picture").asText();
 
                                 avatar = jsonNode.path("author").path("avatar").asText();
                                 nickname = jsonNode.path("author").path("nickname").asText();
@@ -140,6 +141,7 @@ public class VideoDownloaderService {
                         Map<String, String> mappedResponse = new HashMap<>();
                         mappedResponse.put("Nickname", nickname);
                         mappedResponse.put("Avatar", avatar);
+                        mappedResponse.put("Portada", portada);
                         mappedResponse.put("enlace_video", videoUrl);
                         mappedResponse.put("titulo", title);
                         mappedResponse.put("descarga_video", firstLink);

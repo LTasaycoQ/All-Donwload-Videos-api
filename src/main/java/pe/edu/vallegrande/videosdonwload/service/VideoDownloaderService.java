@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,11 +23,12 @@ public class VideoDownloaderService {
     private final VideosRepository videosRepository;
     private static final Logger logger = LoggerFactory.getLogger(VideoDownloaderService.class);
 
+
     @Autowired
     public VideoDownloaderService(WebClient.Builder webClientBuilder, VideosRepository videosRepository) {
         this.webClient = webClientBuilder
                 .baseUrl("https://social-media-video-downloader.p.rapidapi.com")
-                .defaultHeader("x-rapidapi-key", "2e04122a0amshee4e856639b07d6p19ef34jsn78dd0f82df54")
+                .defaultHeader("x-rapidapi-key", "67cbc6ba2amsh44a419b487c7443p184a72jsndc1f0cc49523")
                 .defaultHeader("x-rapidapi-host", "social-media-video-downloader.p.rapidapi.com")
                 .build();
         this.videosRepository = videosRepository;

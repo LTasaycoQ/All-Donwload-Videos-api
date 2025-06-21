@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -23,8 +21,6 @@ public class VideoDownloaderService {
     private final VideosRepository videosRepository;
     private static final Logger logger = LoggerFactory.getLogger(VideoDownloaderService.class);
 
-
-    @Autowired
     public VideoDownloaderService(WebClient.Builder webClientBuilder, VideosRepository videosRepository) {
         this.webClient = webClientBuilder
                 .baseUrl("https://social-media-video-downloader.p.rapidapi.com")
@@ -33,6 +29,9 @@ public class VideoDownloaderService {
                 .build();
         this.videosRepository = videosRepository;
     }
+
+    String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "",
+            portada = "", dominioCase1 = "", dominioCase2 = "";
 
     public Mono<Map<String, String>> getVideoData(String url) {
         logger.info("Fetching video data for URL: {}", url);
@@ -43,101 +42,86 @@ public class VideoDownloaderService {
                 .flatMap(response -> {
                     try {
                         String[] parts = url.split("/");
-                        String domain = parts[2];
+                        String fullDomain = parts[2];
+                        String[] domainParts = fullDomain.split("\\.");
+                        String mainDomain = domainParts.length >= 2 ? domainParts[domainParts.length - 2] : fullDomain;
+
+                        String data[] = { "video_hd_original", "audio", "video_render_480p (video+audio)",
+                                "audio_quality_medium (pt) (only_audio)", "video_hd_0", "audio_0", "video_hd_original_0", "audio_quality_low (es) (only_audio)" };
 
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
+                        JsonNode links = jsonNode.path("links");
 
-                        String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "", portada = "";
-                        switch (domain) {
-                            case "www.tiktok.com":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
-                                portada = jsonNode.path("picture").asText();
-                                avatar = jsonNode.path("author").path("avatar").asText();
-                                nickname = jsonNode.path("author").path("nickname").asText();
+                        videoUrl = jsonNode.path("src_url").asText();
+                        title = jsonNode.path("title").asText();
+                        portada = jsonNode.path("picture").asText();
+                        avatar = jsonNode.path("author").path("avatar").asText();
+                        nickname = jsonNode.path("author").path("nickname").asText();
+                        System.out.println("mi url o dominio: "+ mainDomain);
+                        switch (mainDomain) {
 
-                                firstLink = jsonNode.path("links").get(0).path("link").asText();
-                                audio = jsonNode.path("links").get(2).path("link").asText();
+                            case "tiktok":
+                                dominioCase1 = data[0];
+                                dominioCase2 = data[1];
+
                                 break;
-                            case "vm.tiktok.com":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
-                                portada = jsonNode.path("picture").asText();
+                            case "youtube":
+                                avatar = jsonNode.path("author").path("thumbnails").get(0).path("url").asText();
 
-                                avatar = jsonNode.path("author").path("avatar").asText();
-                                nickname = jsonNode.path("author").path("nickname").asText();
-
-                                firstLink = jsonNode.path("links").get(0).path("link").asText();
-                                audio = jsonNode.path("links").get(1).path("link").asText();
-                                break;
-                            case "youtu.be":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
-
-                                avatar = jsonNode.path("author").path("thumbnails").get(2).path("url").asText();
                                 nickname = jsonNode.path("author").path("name").asText();
-                                firstLink = jsonNode.path("links").get(5).path("link").asText();
-                                audio = jsonNode.path("links").get(0).path("link").asText();
-                                break;
-                            case "www.youtube.com":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
 
-                                avatar = jsonNode.path("author").path("thumbnails").get(2).path("url").asText();
+                                dominioCase1 = data[2];
+                                dominioCase2 = data[7];
+
+                                break;
+                            case "youtu":
+                                avatar = jsonNode.path("author").path("thumbnails").get(0).path("url").asText();
+
                                 nickname = jsonNode.path("author").path("name").asText();
-                                firstLink = jsonNode.path("links").get(7).path("link").asText();
-                                audio = jsonNode.path("links").get(0).path("link").asText();
-                                break;
-                            case "fb.watch":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
 
-                                avatar = jsonNode.path("author").path("thumbnails").get(2).path("url").asText();
-                                nickname = jsonNode.path("author").path("name").asText();
-                                firstLink = jsonNode.path("links").get(0).path("link").asText();
-                                audio = jsonNode.path("links").get(6).path("link").asText();
-                                break;
-                            case "www.facebook.com":
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
-
-                                avatar = "No tiene🥺";
-                                nickname = "No tiene🥺";
-
-                                firstLink = jsonNode.path("links").get(1).path("link").asText();
-                                audio = jsonNode.path("links").get(4).path("link").asText();
-                                break;
-                            case "www.instagram.com":
-
-                                videoUrl = jsonNode.path("src_url").asText();
-                                title = jsonNode.path("title").asText();
-
-                                // avatar =
-                                // jsonNode.path("author").path("thumbnails").get(2).path("url").asText();
-                                // nickname = jsonNode.path("author").path("name").asText();
-                                avatar = "No tiene🥺";
-                                nickname = "No tiene🥺";
-                                firstLink = jsonNode.path("links").get(1).path("link").asText();
-                                audio = jsonNode.path("links").get(0).path("link").asText();
-
-                                Integer verficacion = firstLink.length();
-
-                                if (verficacion < 500) {
-                                    videoUrl = jsonNode.path("src_url").asText();
-                                    title = jsonNode.path("title").asText();
-
-                                    // avatar =
-                                    // jsonNode.path("author").path("thumbnails").get(2).path("url").asText();
-                                    // nickname = jsonNode.path("author").path("name").asText();
-                                    avatar = "No tiene🥺";
-                                    nickname = "No tiene🥺";
-                                    firstLink = jsonNode.path("links").get(0).path("link").asText();
-                                    audio = jsonNode.path("links").get(1).path("link").asText();
-                                }
+                                dominioCase1 = data[2];
+                                dominioCase2 = data[3];
 
                                 break;
+                            case "facebook":
+                                nickname = "La respuesta no encuentra el avatar";
+                                avatar = "La respuesta no encuentra el avatar";
+                                dominioCase1 = data[4];
+                                dominioCase2 = data[5];
+
+                                break;
+                            case "instagram":
+                                avatar = jsonNode.path("author").path("profile_pic_url").asText();
+
+                                nickname = jsonNode.path("author").path("username").asText();
+
+                                dominioCase1 = data[6];
+                                dominioCase2 = data[5];
+                                break;
+
                             default:
+                                break;
+                        }
+
+                        for (int i = 0; i < links.size(); i++) {
+
+                            firstLink = links.get(i).path("quality").asText();
+
+                            if (firstLink.equals(dominioCase1)) {
+
+                                for (int a = 0; a < links.size(); a++) {
+                                    audio = links.get(a).path("quality").asText();
+
+                                    if (audio.equals(dominioCase2)) {
+
+                                        audio = links.get(a).path("link").asText();
+                                        break;
+                                    }
+                                }
+                                firstLink = links.get(i).path("link").asText();
+                                break;
+                            }
                         }
 
                         Map<String, String> mappedResponse = new HashMap<>();
@@ -165,5 +149,5 @@ public class VideoDownloaderService {
                     }
                 });
     }
-}
 
+}

@@ -31,7 +31,8 @@ public class VideoDownloaderService {
     }
 
     String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "",
-            portada = "", dominioCase1 = "", dominioCase2 = "";
+            portada = "", dominioCase1 = "", dominioCase2 = "", like = "", comentario = "", vistas = "",
+            compartidos = "";
 
     public Mono<Map<String, String>> getVideoData(String url) {
         logger.info("Fetching video data for URL: {}", url);
@@ -47,23 +48,28 @@ public class VideoDownloaderService {
                         String mainDomain = domainParts.length >= 2 ? domainParts[domainParts.length - 2] : fullDomain;
 
                         String data[] = { "video_hd_original", "audio", "video_render_480p (video+audio)",
-                                "audio_quality_medium (pt) (only_audio)", "video_hd_0", "audio_0", "video_hd_original_0", "audio_quality_low (es) (only_audio)" };
+                                "audio_quality_medium (pt) (only_audio)", "video_hd_0", "audio_0",
+                                "video_hd_original_0", "audio_quality_low (es) (only_audio)" };
 
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
                         JsonNode links = jsonNode.path("links");
+                        JsonNode dataStats = jsonNode.path("stats");
 
                         videoUrl = jsonNode.path("src_url").asText();
                         title = jsonNode.path("title").asText();
                         portada = jsonNode.path("picture").asText();
                         avatar = jsonNode.path("author").path("avatar").asText();
                         nickname = jsonNode.path("author").path("nickname").asText();
-                        System.out.println("mi url o dominio: "+ mainDomain);
                         switch (mainDomain) {
 
                             case "tiktok":
                                 dominioCase1 = data[0];
                                 dominioCase2 = data[1];
+                                like = dataStats.path("diggCount").asText();
+                                compartidos = dataStats.path("shareCount").asText();
+                                comentario = dataStats.path("commentCount").asText();
+                                vistas = dataStats.path("playCount").asText();
 
                                 break;
                             case "youtube":
@@ -74,6 +80,10 @@ public class VideoDownloaderService {
                                 dominioCase1 = data[2];
                                 dominioCase2 = data[7];
 
+                                like = dataStats.path("likes").asText();
+                                comentario = dataStats.path("comments").path("header").path("count").path("runs").get(0).path("text").asText();
+                                vistas = dataStats.path("viewCount").asText();
+
                                 break;
                             case "youtu":
                                 avatar = jsonNode.path("author").path("thumbnails").get(0).path("url").asText();
@@ -82,6 +92,10 @@ public class VideoDownloaderService {
 
                                 dominioCase1 = data[2];
                                 dominioCase2 = data[3];
+
+                                like = dataStats.path("likes").asText();
+                                comentario = dataStats.path("comments").path("header").path("count").path("runs").get(0).path("text").asText();
+                                vistas = dataStats.path("viewCount").asText();
 
                                 break;
                             case "facebook":
@@ -98,6 +112,11 @@ public class VideoDownloaderService {
 
                                 dominioCase1 = data[6];
                                 dominioCase2 = data[5];
+                                like = dataStats.path("like_count").asText();
+                                compartidos = dataStats.path("play_count").asText();
+                                comentario = dataStats.path("comment_count").asText();
+                                vistas = dataStats.path("view_count").asText();
+
                                 break;
 
                             default:
@@ -127,6 +146,10 @@ public class VideoDownloaderService {
                         Map<String, String> mappedResponse = new HashMap<>();
                         mappedResponse.put("Nickname", nickname);
                         mappedResponse.put("Avatar", avatar);
+                        mappedResponse.put("Like", like);
+                        mappedResponse.put("Comentarios", comentario);
+                        mappedResponse.put("Compartidos", compartidos);
+                        mappedResponse.put("Vistas", vistas);
                         mappedResponse.put("Portada", portada);
                         mappedResponse.put("enlace_video", videoUrl);
                         mappedResponse.put("titulo", title);

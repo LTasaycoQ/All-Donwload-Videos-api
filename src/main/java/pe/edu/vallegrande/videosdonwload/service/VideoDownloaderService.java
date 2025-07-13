@@ -23,13 +23,21 @@ public class VideoDownloaderService {
     private final VideosRepository videosRepository;
     private static final Logger logger = LoggerFactory.getLogger(VideoDownloaderService.class);
 
+    @Value("${rapidapi.key}")
+    private String apiKey;
+
+    @Value("${rapidapi.host}")
+    private String apiHost;
+
+    @Value("${rapidapi.base-url}")
+    private String baseUrl;
 
     @Autowired
     public VideoDownloaderService(WebClient.Builder webClientBuilder, VideosRepository videosRepository) {
         this.webClient = webClientBuilder
-                .baseUrl("https://social-media-video-downloader.p.rapidapi.com")
-                .defaultHeader("x-rapidapi-key", "67cbc6ba2amsh44a419b487c7443p184a72jsndc1f0cc49523")
-                .defaultHeader("x-rapidapi-host", "social-media-video-downloader.p.rapidapi.com")
+                .baseUrl(baseUrl)
+                .defaultHeader("x-rapidapi-key", apiKey)
+                .defaultHeader("x-rapidapi-host", apiHost)
                 .build();
         this.videosRepository = videosRepository;
     }
@@ -48,7 +56,8 @@ public class VideoDownloaderService {
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
 
-                        String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "", portada = "";
+                        String videoUrl = "", title = "", avatar = "", nickname = "", firstLink = "", audio = "",
+                                portada = "";
                         switch (domain) {
                             case "www.tiktok.com":
                                 videoUrl = jsonNode.path("src_url").asText();
@@ -166,4 +175,3 @@ public class VideoDownloaderService {
                 });
     }
 }
-

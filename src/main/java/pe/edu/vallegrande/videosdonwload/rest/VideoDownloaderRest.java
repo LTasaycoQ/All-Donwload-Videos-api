@@ -12,7 +12,7 @@ import pe.edu.vallegrande.videosdonwload.service.VideoDownloaderService;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://lt-download.onrender.com/")
 @RequestMapping("/api")
 public class VideoDownloaderRest {
     private final VideoDownloaderService videoDownloaderService;

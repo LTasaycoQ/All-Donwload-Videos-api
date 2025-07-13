@@ -23,17 +23,14 @@ public class VideoDownloaderService {
     private final VideosRepository videosRepository;
     private static final Logger logger = LoggerFactory.getLogger(VideoDownloaderService.class);
 
-    @Value("${rapidapi.key}")
-    private String apiKey;
-
-    @Value("${rapidapi.host}")
-    private String apiHost;
-
-    @Value("${rapidapi.base-url}")
-    private String baseUrl;
-
     @Autowired
-    public VideoDownloaderService(WebClient.Builder webClientBuilder, VideosRepository videosRepository) {
+    public VideoDownloaderService(
+            WebClient.Builder webClientBuilder,
+            VideosRepository videosRepository,
+            @Value("${rapidapi.key}") String apiKey,
+            @Value("${rapidapi.host}") String apiHost,
+            @Value("${rapidapi.base-url}") String baseUrl
+    ) {
         this.webClient = webClientBuilder
                 .baseUrl(baseUrl)
                 .defaultHeader("x-rapidapi-key", apiKey)

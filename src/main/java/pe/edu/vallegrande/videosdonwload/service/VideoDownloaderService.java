@@ -58,7 +58,7 @@ public class VideoDownloaderService {
 
                         String data[] = { "video_hd_original", "audio", "video_render_480p (video+audio)",
                                 "audio_quality_medium (pt) (only_audio)", "video_hd_0", "audio_0",
-                                "video_hd_original_0", "audio_quality_low (es) (only_audio)" };
+                                "video_hd_original_0", "only_audio", "audio_quality_medium (en) (only_audio)" };
 
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
@@ -100,7 +100,7 @@ public class VideoDownloaderService {
                                 nickname = jsonNode.path("author").path("name").asText();
 
                                 dominioCase1 = data[2];
-                                dominioCase2 = data[3];
+                                dominioCase2 = data[7];
 
                                 like = dataStats.path("likes").asText();
                                 comentario = dataStats.path("comments").path("header").path("count").path("runs").get(0).path("text").asText();
@@ -141,7 +141,7 @@ public class VideoDownloaderService {
                                 for (int a = 0; a < links.size(); a++) {
                                     audio = links.get(a).path("quality").asText();
 
-                                    if (audio.equals(dominioCase2)) {
+                                    if (audio.contains(dominioCase2)) {
 
                                         audio = links.get(a).path("link").asText();
                                         break;

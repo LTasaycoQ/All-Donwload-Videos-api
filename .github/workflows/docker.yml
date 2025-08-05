@@ -18,7 +18,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t luistasayco2004/all-donwload-videos:${{ env.VERSION }} .
+          docker build -t ltasayco/all-donwload-videos:${{ env.VERSION }} .
 
       - name: Docker Hub Login
         env:
@@ -28,4 +28,4 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push luistasayco2004/all-donwload-videos:${{ env.VERSION }}
+          docker push ltasayco/all-donwload-videos:${{ env.VERSION }}

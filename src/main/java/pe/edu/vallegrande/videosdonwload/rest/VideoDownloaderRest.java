@@ -22,7 +22,7 @@ public class VideoDownloaderRest {
     }
 
     @GetMapping("/download")
-    public Mono<Map<String, String>> getVideoLinks(@RequestParam String url) {
-        return videoDownloaderService.getVideoData(url);
+    public Mono<Object> getVideoLinks(@RequestParam String url) {
+        return videoDownloaderService.getVideoProcess(url);
     }
 }

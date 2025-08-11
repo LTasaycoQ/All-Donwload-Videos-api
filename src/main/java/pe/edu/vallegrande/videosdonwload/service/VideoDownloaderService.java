@@ -64,24 +64,34 @@ public class VideoDownloaderService {
                 .flatMap(jsonNode -> {
                     try {
 
+                        Boolean responseStatus;
                         JsonNode responseApi = (JsonNode) jsonNode;
                         JsonNode dataVideoResponse = getStateVideo(url, responseApi);
 
                         Map<String, Object> resultado = new HashMap<>();
-                        resultado.put("nickname", dataVideoResponse.path("nickname").asText());
-                        resultado.put("avatar", dataVideoResponse.path("avatar").asText());
-                        resultado.put("frontPage", dataVideoResponse.path("frontPage").asText());
-                        resultado.put("videoUrl", url);
-                        resultado.put("title", dataVideoResponse.path("title").asText());
-                        resultado.put("linkVideo", dataVideoResponse.path("linkVideo").asText());
-                        resultado.put("linkAudio", dataVideoResponse.path("linkAudio").asText());
-                        resultado.put("like", dataVideoResponse.path("like").asText());
-                        resultado.put("views", dataVideoResponse.path("views").asText());
-                        resultado.put("comments", dataVideoResponse.path("comments").asText());
-                        resultado.put("shared", dataVideoResponse.path("shared").asText());
+                        responseStatus = dataVideoResponse.path("responseStatus").asBoolean();
+                        if (responseStatus) {
+                            resultado.put("responseStatus", dataVideoResponse.path("responseStatus").asBoolean());
 
-                        videos video = mapToVideoEntity(url, dataVideoResponse);
-                        videosRepository.save(video).subscribe(); 
+                            resultado.put("nickname", dataVideoResponse.path("nickname").asText());
+                            resultado.put("avatar", dataVideoResponse.path("avatar").asText());
+                            resultado.put("frontPage", dataVideoResponse.path("frontPage").asText());
+                            resultado.put("videoUrl", url);
+                            resultado.put("title", dataVideoResponse.path("title").asText());
+                            resultado.put("linkVideo", dataVideoResponse.path("linkVideo").asText());
+                            resultado.put("linkAudio", dataVideoResponse.path("linkAudio").asText());
+                            resultado.put("like", dataVideoResponse.path("like").asText());
+                            resultado.put("views", dataVideoResponse.path("views").asText());
+                            resultado.put("comments", dataVideoResponse.path("comments").asText());
+                            resultado.put("shared", dataVideoResponse.path("shared").asText());
+
+                            videos video = mapToVideoEntity(url, dataVideoResponse);
+                            videosRepository.save(video).subscribe();
+                        } else {
+                            resultado.put("responseStatus", dataVideoResponse.path("responseStatus").asBoolean());
+                            resultado.put("message", "video not found");
+
+                        }
 
                         return Mono.just(resultado);
                     } catch (Exception e) {
@@ -105,7 +115,7 @@ public class VideoDownloaderService {
 
         JsonNode links = responseApi.path("links");
         JsonNode dataStats = responseApi.path("stats");
-
+        Boolean responseStatus = true;
         String like = null;
         String shared = null;
         String comments = null;
@@ -164,9 +174,14 @@ public class VideoDownloaderService {
                 video = data[4];
                 audio = data[5];
                 break;
-            default:
+
+            case "facebook":
                 video = data[2];
                 audio = data[3];
+                break;
+            default:
+                responseStatus = false;
+
                 break;
         }
 
@@ -175,6 +190,7 @@ public class VideoDownloaderService {
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();
+        json.put("responseStatus", responseStatus);
         json.put("shared", shared);
         json.put("like", like);
         json.put("views", views);

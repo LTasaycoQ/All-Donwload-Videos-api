@@ -165,8 +165,7 @@ public class VideoDownloaderService {
             case "youtu":
             case "youtube":
                 like = dataStats.path("likes").asText();
-                comments = dataStats.path("comments").path("header").path("count").path("runs").get(0).path("text")
-                        .asText();
+                comments = "privado";
                 avatar = responseApi.path("author").path("thumbnails").get(0).path("url").asText();
                 nickname = responseApi.path("author").path("name").asText();
 

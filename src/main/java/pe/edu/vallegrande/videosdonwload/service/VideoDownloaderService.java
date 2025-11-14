@@ -41,8 +41,10 @@ public class VideoDownloaderService {
 
     public Mono<Object> getVideoData(String url) {
         logger.info("Fetching video data for URL: {}", url);
+        String red = methodRecognizeNetwork(url);
+
         return webClient.get()
-                .uri("/smvd/get/all?url={url}", url)
+                .uri("/smvd/get/"+ red +"?url={url}", url)
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(response -> {
@@ -72,7 +74,7 @@ public class VideoDownloaderService {
                         responseStatus = dataVideoResponse.path("responseStatus").asBoolean();
                         if (responseStatus) {
                             resultado.put("responseStatus", dataVideoResponse.path("responseStatus").asBoolean());
-
+                            resultado.put("links", responseApi.path("links"));
                             resultado.put("nickname", dataVideoResponse.path("nickname").asText());
                             resultado.put("avatar", dataVideoResponse.path("avatar").asText());
                             resultado.put("frontPage", dataVideoResponse.path("frontPage").asText());
@@ -101,6 +103,8 @@ public class VideoDownloaderService {
     }
 
     private videos mapToVideoEntity(String url, JsonNode dataVideoResponse) {
+        dataVideoResponse.path("links");
+
         videos video = new videos();
         video.setTitulo(dataVideoResponse.path("title").asText());
         video.setAvatar(dataVideoResponse.path("picture").asText());
@@ -209,6 +213,8 @@ public class VideoDownloaderService {
             String[] parts = url.split("/");
             String fullDomain = parts[2];
             String[] domainParts = fullDomain.split("\\.");
+
+            
             return domainParts.length >= 2 ? domainParts[domainParts.length - 2] : fullDomain;
         } catch (Exception e) {
             logger.warn("No se pudo reconocer el dominio de: " + url);

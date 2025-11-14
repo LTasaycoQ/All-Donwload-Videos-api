@@ -25,4 +25,26 @@ public class VideoDownloaderRest {
     public Mono<Object> getVideoLinks(@RequestParam String url) {
         return videoDownloaderService.getVideoProcess(url);
     }
+
+    @GetMapping("/download/tiktok")
+    public Mono<Object> getVideoTikTok(@RequestParam String url) {
+        return videoDownloaderService.getVideoProcess(url);
+    }
+
+    @GetMapping("/download/youtube")
+    public Mono<Object> getVideoYoutube(@RequestParam String url) {
+        return videoDownloaderService.getVideoProcess(url);
+    }
+
+    @GetMapping("/download/instagram")
+    public Mono<Object> getVideoInstagram(@RequestParam String url) {
+        return videoDownloaderService.getVideoProcess(url);
+    }
+
+
+
+    @GetMapping("/download/facebook")
+    public Mono<Object> getVideoFacebook(@RequestParam String url) {
+        return videoDownloaderService.getVideoProcess(url);
+    }
 }

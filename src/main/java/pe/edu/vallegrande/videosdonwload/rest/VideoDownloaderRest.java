@@ -12,7 +12,7 @@ import pe.edu.vallegrande.videosdonwload.service.VideoDownloaderService;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin(origins = "https://downime.netlify.app/")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class VideoDownloaderRest {
     private final VideoDownloaderService videoDownloaderService;
